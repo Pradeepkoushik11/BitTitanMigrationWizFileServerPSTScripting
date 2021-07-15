@@ -3429,7 +3429,7 @@ Function Get-OD4BAccounts {
                     SourceFolder                  = $userUpn.split("@")[0]
                 }
 
-                $obj1 = New-Object –TypeName PSObject –Property $properties 
+                $obj1 = New-Object -TypeName PSObject -Property $properties 
 
                 $od4bArray += $obj1 
                 Break
@@ -3437,7 +3437,7 @@ Function Get-OD4BAccounts {
         }
     }
 
-    $od4bArray = $od4bArray | sort-object UserPrincipalName –Unique
+    $od4bArray = $od4bArray | sort-object UserPrincipalName -Unique
 
     Return $od4bArray 
 }
