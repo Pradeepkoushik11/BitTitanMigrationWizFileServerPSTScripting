@@ -3123,14 +3123,14 @@ Function Connect-Azure {
     Write-Host $msg
     Log-Write -Message $msg   
 
-    Load-Module ("AzureRm")
+    #Load-Module ("Az")
 
     Try {
         if ($subscriptionID -eq $null) {
-            $result = Login-AzureRMAccount  -Environment "AzureCloud" -ErrorAction Stop -Credential $azureCredentials
+            $result = Connect-AzAccount  -Environment "AzureCloud" -ErrorAction Stop -Credential $azureCredentials
         }
         else {
-            $result = Login-AzureRMAccount -Environment "AzureCloud" -SubscriptionId $subscriptionID -ErrorAction Stop -Credential $azureCredentials
+            $result = Connect-AzAccount -Environment "AzureCloud" -SubscriptionId $subscriptionID -ErrorAction Stop -Credential $azureCredentials
         }
     }
     catch {
@@ -3140,10 +3140,10 @@ Function Connect-Azure {
         
         Try {
             if ($subscriptionID -eq $null) {
-                $result = Login-AzureRMAccount  -Environment "AzureCloud" -ErrorAction Stop 
+                $result = Connect-AzAccount  -Environment "AzureCloud" -ErrorAction Stop 
             }
             else {
-                $result = Login-AzureRMAccount -Environment "AzureCloud" -SubscriptionId $subscriptionID -ErrorAction Stop 
+                $result = Connect-AzAccount -Environment "AzureCloud" -SubscriptionId $subscriptionID -ErrorAction Stop 
             }
         }
         catch {
@@ -3159,7 +3159,7 @@ Function Connect-Azure {
     try {
 
         #If there are multiple Azure Subscriptions in the tenant ensure the current context is set correctly.
-        $result = Get-AzSubscription -SubscriptionID $subscriptionID | Set-AzureRmContext
+        $result = Get-AzSubscription -SubscriptionID $subscriptionID | Set-AzContext
 
         $azureAccount = (Get-AzContext).Account.Id
         $subscriptionName = (Get-AzSubscription -SubscriptionID $subscriptionID).Name
@@ -3178,10 +3178,10 @@ Function Connect-Azure {
     }
 }
 
-# Function to check if AzureRM is installed
-Function Check-AzureRM {
+# Function to check if AzModule is installed
+Function Check-AzModule {
     Try {
-        $result = get-module -ListAvailable -name AzureRM -ErrorAction Stop
+        $result = Get-InstalledModule -Name 'Az' -AllVersions -ErrorAction Stop
         if ($result) {
             $msg = "INFO: Ready to execute Azure PowerShell module $($result.moduletype), $($result.version), $($result.name)"
             Write-Host $msg
@@ -3192,12 +3192,12 @@ Function Check-AzureRM {
             Write-Host -ForegroundColor Red $msg
             Log-Write -Message $msg 
 
-            Install-Module -Name Az -Scope CurrentUser -Repository PSGallery -Force
+            Install-Module -Name Az -Scope CurrentUser -Repository PSGallery -AllowClobber -Force
             Import-Module Az
 
             Try {
                 
-                $result = get-module -ListAvailable -name AzureRM -ErrorAction Stop
+                $result = Get-InstalledModule -Name 'Az' -AllVersions -ErrorAction Stop
                 
                 If ($result) {
                     write-information "INFO: Ready to execute PowerShell module $($result.moduletype), $($result.version), $($result.name)"
@@ -3223,7 +3223,7 @@ Function Check-AzureRM {
 
     }
     Catch {
-        $msg = "ERROR: Failed to check if the AzureRM module is installed. Script aborted."
+        $msg = "ERROR: Failed to check if the AzModule module is installed. Script aborted."
         Write-Host -ForegroundColor Red  $msg
         Log-Write -Message $msg    
         Write-Host -ForegroundColor Red $_.Exception.Message
@@ -4039,8 +4039,8 @@ if (!$global:btAzureStorageAccountChecked) {
     Log-Write -Message $msg 
     Write-Host
 
-    # AzureRM module installation
-    Check-AzureRM
+    # AzModule module installation
+    Check-AzModule
     # Azure log in
     if ($azureSubscriptionEndpointData.SubscriptionID) {
         Connect-Azure -AzureCredentials $global:btAzureCredentials -SubscriptionID $azureSubscriptionEndpointData.SubscriptionID
@@ -4373,8 +4373,8 @@ foreach ($user in $users) {
     Log-Write -Message "GENERATING PST ASSESSMENT REPORT " 
     write-host 
 
-    # AzureRM module installation
-    Check-AzureRM
+    # AzModule module installation
+    Check-AzModule
                     
     $StorageContext = New-AzStorageContext -StorageAccountName $exportEndpointData.AdministrativeUsername -StorageAccountKey $script:secretKey
         
