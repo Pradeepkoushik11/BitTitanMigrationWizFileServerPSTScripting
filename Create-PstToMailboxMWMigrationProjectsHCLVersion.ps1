@@ -4394,6 +4394,8 @@ foreach ($user in $users) {
         
         $result = Get-AzStorageBlob -Context $StorageContext -Container $containerName | Where-Object { $_.Name -like "*metadata" } | Get-AzStorageBlobContent -Destination "$script:workingDir\PSTMetadata-$containerName" -force
     }
+
+    Write-Progress -Activity " " -Completed
     
     $split_variables = ","
     # This word will be used to split the PST Files when more than one exists.
