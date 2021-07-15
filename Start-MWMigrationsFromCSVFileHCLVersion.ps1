@@ -463,7 +463,7 @@ Function Select-MSPC_Customer {
 
     } while ($customersPage)
 
-    
+    Write-Progress -Activity " " -Completed
 
     if ($customers -ne $null -and $customers.Length -ge 1) {
         Write-Host -ForegroundColor Green -Object ("SUCCESS: " + $customers.Length.ToString() + " customer(s) found.") 
@@ -676,6 +676,8 @@ Function Select-MW_Connector {
             }
 
         } while ($connectorsPage)
+
+        Write-Progress -Activity " " -Completed
 
         if ($script:connectors -ne $null -and $script:connectors.Length -ge 1) {
             Write-Host -ForegroundColor Green -Object ("SUCCESS: " + $script:connectors.Length.ToString() + " mailbox connector(s) found.") 
