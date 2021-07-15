@@ -41,7 +41,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 .PARAMETER DownloadLatestVersion
     This parameter defines if the script must download the latest version of UploaderWiz before starting the UploaderWiz execution for file server upload. 
     This parameter is optional. If you don't specify the parameter with true value, the script will check if UploaderWIz was downloaded and if it was, 
-    it will skip the new download. If UploaderWiz wasn´t previously downloaded it will download it for the first time. 
+    it will skip the new download. If UploaderWiz wasnÂ´t previously downloaded it will download it for the first time. 
 .PARAMETER BitTitanWorkgroupId
     This parameter defines the BitTitan Workgroup Id.
     This parameter is optional. If you don't specify a BitTitan Workgroup Id, the script will display a menu for you to manually select the workgroup.  
@@ -70,7 +70,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
     Example: to process all projects starting with "Batch" you enter '-ProjectSearchTerm Batch'  
 .PARAMETER CheckFileServer
     This parameter defines if the script must analyze the file server and remove all invalid characters both in Azure blob container and in OneDrive. 
-    This parameter is optional. If you don't specify the parameter with true value, the file server folder and file names won´t be analyzed and invalid characters won´t be removed.
+    This parameter is optional. If you don't specify the parameter with true value, the file server folder and file names wonÂ´t be analyzed and invalid characters wonÂ´t be removed.
 .PARAMETER CheckOneDriveAccounts
     This parameter defines if the home directory name exist as a OneDrive for Business account (Home Directory name = User Principal Name prefix).
     This parameter is mandatory. If you don't specify the paramter with a true value, you have to specify a CSV file name with the home directory and OneDrive for Business mapping.
@@ -3491,7 +3491,7 @@ Function Get-OD4BAccounts {
                     SourceFolder                  = $userUpn.split("@")[0]
                 }
 
-                $obj1 = New-Object –TypeName PSObject –Property $properties 
+                $obj1 = New-Object â€“TypeName PSObject â€“Property $properties 
 
                 $od4bArray += $obj1 
                 Break
@@ -3499,7 +3499,7 @@ Function Get-OD4BAccounts {
         }
     }
 
-    $od4bArray = $od4bArray | sort-object UserPrincipalName –Unique
+    $od4bArray = $od4bArray | sort-object UserPrincipalName â€“Unique
 
     Return $od4bArray 
 }
