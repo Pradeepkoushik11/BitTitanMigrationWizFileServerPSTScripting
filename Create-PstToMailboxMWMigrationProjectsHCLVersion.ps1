@@ -3437,7 +3437,7 @@ Function Get-OD4BAccounts {
         }
     }
 
-    $od4bArray = $od4bArray | sort-object UserPrincipalName -Unique
+    $od4bArray = $od4bArray | sort-object UserPrincipalName –Unique
 
     Return $od4bArray 
 }
@@ -4365,6 +4365,8 @@ foreach ($user in $users) {
     $containerName = $user.SourceFolder
     $containerName = $containerName.ToLower()
 
+    Create-Working-Directory -workingDir $workingDir -logDir $logDir -metadataDir "$script:workingDir\PSTMetadata-$containerName\"
+
     write-host 
     $msg = "#######################################################################################################################`
                     GENERATING PST ASSESSMENT REPORT                  `
@@ -4490,7 +4492,7 @@ foreach ($user in $users) {
         $exportType = "Pst" 
         $importType = "ExchangeOnline2"
     
-        Create-Working-Directory -workingDir $workingDir -logDir $logDir -metadataDir "$script:workingDir\PSTMetadata-$containerName\"
+        
 
         $exportTypeName = "MigrationProxy.WebApi.AzureConfiguration"
         $exportConfiguration = New-Object -TypeName $exportTypeName -Property @{
