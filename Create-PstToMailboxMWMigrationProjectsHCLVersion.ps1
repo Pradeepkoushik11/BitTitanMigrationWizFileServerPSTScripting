@@ -3437,7 +3437,7 @@ Function Get-OD4BAccounts {
         }
     }
 
-    $od4bArray = $od4bArray | sort-object UserPrincipalName –Unique
+    $od4bArray = $od4bArray | sort-object UserPrincipalName -Unique
 
     Return $od4bArray 
 }
