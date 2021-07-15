@@ -650,6 +650,48 @@ Function Connect-BitTitan {
     }
 }
 
+Function Connect-Office365 {
+    #Install Packages/Modules for Windows Credential Manager if required
+    If (!(Get-PackageProvider -Name 'NuGet')) {
+        Install-PackageProvider -Name NuGet -Force
+    }
+    If (!(Get-Module -ListAvailable -Name 'CredentialManager')) {
+        Install-Module CredentialManager -Force
+    } 
+    else { 
+        Import-Module CredentialManager
+    }
+
+    # Authenticate
+    $global:btO365Credentials = Get-StoredCredential -Target 'MigrationWizFileServerMigration'
+    
+    if (!$global:btO365Credentials) {
+        $credentials = (Get-Credential -Message "Enter Office 365 credentials")
+        if (!$credentials) {
+            $msg = "ERROR: Failed to authenticate with Office 365. Please enter valid Office 365 Credentials. Script aborted."
+            Write-Host -ForegroundColor Red  $msg
+            Log-Write -Message $msg
+            Exit
+        }
+        New-StoredCredential -Target 'MigrationWizFileServerMigration' -Persist 'LocalMachine' -Credentials $credentials | Out-Null
+        
+        $msg = "SUCCESS: Office 365 credentials for target 'MigrationWizFileServerMigration' stored in Windows Credential Manager."
+        Write-Host -ForegroundColor Green  $msg
+        Log-Write -Message $msg
+
+        $global:btO365Credentials = Get-StoredCredential -Target 'MigrationWizFileServerMigration'
+
+        $msg = "SUCCESS: Office 365 credentials for target 'MigrationWizFileServerMigration' retrieved from Windows Credential Manager."
+        Write-Host -ForegroundColor Green  $msg
+        Log-Write -Message $msg
+    }
+    else {
+        $msg = "SUCCESS: Office 365 credentials for target 'MigrationWizFileServerMigration' retrieved from Windows Credential Manager."
+        Write-Host -ForegroundColor Green  $msg
+        Log-Write -Message $msg
+    }
+}
+
 # Function to create an endpoint under a customer
 # Configuration Table in https://www.bittitan.com/doc/powershell.html#PagePowerShellmspcmd%20
 Function Create-MSPC_Endpoint {
@@ -4356,7 +4398,7 @@ if (!$global:btO365Credentials) {
     }
 
     write-host
-    
+    Connect-Office365
 
     <#
     if(!$script:adminPassword) {
