@@ -4399,12 +4399,14 @@ foreach ($user in $users) {
         Write-Host $msg
         Log-Write -Message $msg 
         Write-Host
+
+        Write-Progress -Activity " " -Completed
         
         $result = Get-AzStorageBlob -Context $StorageContext -Container $containerName | Where-Object { $_.Name -like "*metadata" } | Get-AzStorageBlobContent -Destination "$script:workingDir\PSTMetadata-$containerName" -force
     }
 
     Write-Progress -Activity " " -Completed
-    
+
     $split_variables = ","
     # This word will be used to split the PST Files when more than one exists.
     # The metadata file is not very well structured
@@ -4547,7 +4549,7 @@ foreach ($user in $users) {
             $pstFilePath = $pstFile.OriginalPSTFolderPath 
             $pstFilePath = $pstFilePath.replace( "$FileServerRootFolderPath\", "")
             $pstFilePath = $pstFilePath.TrimStart("\")
-            $pstFilePath = $pstFilePath.ToLower().replace( "$containerName", "")
+            $pstFilePath = $pstFilePath -ireplace( "$containerName", "")
             $pstFilePath = $pstFilePath.TrimStart("\")
             $pstFilePath = $pstFilePath -replace "\\", "/"
         
@@ -4571,7 +4573,7 @@ foreach ($user in $users) {
 
                     $ProcessedLines += 1
 
-                    [array]$PstToMailboxProject += New-Object PSObject -Property @{ProjectName = $ProjectName; ProjectType = 'Storage'; ConnectorId = $connectorId; MailboxId = $result.id; PstFilePath = $pstFilePath; EmailAddress = $importEmailAddress; CreateDate = $(Get-Date -Format yyyyMMddHHmm) } 
+                    [array]$PstToMailboxProject += New-Object PSObject -Property @{ProjectName = $ProjectName; ProjectType = 'Archive'; ConnectorId = $connectorId; MailboxId = $result.id; PstFilePath = $pstFilePath; EmailAddress = $importEmailAddress; CreateDate = $(Get-Date -Format yyyyMMddHHmm) } 
                 }
                 catch {
                     $msg = "ERROR: Failed to add PST file and destination primary SMTP address." 
