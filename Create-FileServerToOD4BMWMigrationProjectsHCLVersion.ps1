@@ -4309,7 +4309,7 @@ write-host
 
 #Run the UploaderWiz command line with parameters
 
-$msg = "INFO: Launching UploaderWiz with these parameters:`r`n$uploaderwizCommand"
+$msg = "INFO: Launching UploaderWiz with these parameters:`r`n$uploaderwizCommandFilePath $uploaderwizCommandArgumentList"
 Write-Host $msg
 Log-Write -Message $msg   
 Write-Host
