@@ -109,7 +109,6 @@ Param
     [Parameter(Mandatory = $false)] [Boolean]$CheckFileServer,
     [Parameter(Mandatory = $false)] [Boolean]$CheckOneDriveAccounts,
     [Parameter(Mandatory = $false)] [Object]$HomeDirToUserPrincipalNameMapping,
-    [Parameter(Mandatory = $false)] [String]$MigrationWizFolderMapping,
     [Parameter(Mandatory = $false)] [Boolean]$OwnAzureStorageAccount,
     [Parameter(Mandatory = $false)] [Boolean]$ApplyUserMigrationBundle,
     [Parameter(Mandatory = $false)] [Boolean]$ApplyCustomFolderMapping
@@ -4287,33 +4286,6 @@ Write-Host $msg
 Log-Write -Message $msg   
 Write-Host
 
-if ([string]::IsNullOrEmpty($MigrationWizFolderMapping)) {
-    $applyCustomFolderMapping = $false
-    do {
-        $confirm = (Read-Host -prompt "Do you want to add a custom folder mapping to move the home directory under a folder?  [Y]es or [N]o")
-
-        if ($confirm.ToLower() -eq "y") {
-            $applyCustomFolderMapping = $true
-            
-            do {
-                Write-host -ForegroundColor Yellow  "ACTION: Enter the destination folder name: "  -NoNewline
-                $destinationFolder = Read-Host
-
-            } while ($destinationFolder -eq "")            
-        }
-    } while (($confirm.ToLower() -ne "y") -and ($confirm.ToLower() -ne "n"))
-}
-else {
-    if ($MigrationWizFolderMapping ) {
-        $applyCustomFolderMapping = $true  
-        $destinationFolder = $MigrationWizFolderMapping 
-    }
-    else {
-        $applyCustomFolderMapping = $false
-    }
-}
-
-
 if (-not [string]::IsNullOrEmpty($ApplyUserMigrationBundle) -and $ApplyUserMigrationBundle) {
     $msg = "INFO: Checking User Migration Bundle licenses available in the BitTItan account:"
     Write-Host $msg
@@ -4556,7 +4528,7 @@ foreach ($user in $users) {
             [string]$CH34 = [CHAR]34
             if ($applyCustomFolderMapping) {
 
-                $folderMapping = "FolderMapping=" + $CH34 + "^>$pstFilePath/" + $destinationFolder + $CH34
+                $folderMapping = "FolderMapping=" + $CH34 + "^->$($pstFilePath -replace('.pst',''))) /" + $destinationFolder + $CH34
             }
 
             $result = Get-MW_Mailbox -ticket $script:MwTicket -ConnectorId $connectorId -PublicFolderPath $pstFilePath -ImportEmailAddress $importEmailAddress -ErrorAction SilentlyContinue
