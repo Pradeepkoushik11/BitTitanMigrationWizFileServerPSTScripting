@@ -124,7 +124,8 @@ Param
     [Parameter(Mandatory = $true)] [Boolean]$ApplyUserMigrationBundle,
     [Parameter(Mandatory = $true)] [Boolean]$ApplyCustomFolderMapping,
     [Parameter(Mandatory = $true)] [ValidateSet('All', 'NotStarted', 'Failed', 'ErrorItems', 'NotSuccessfull')] [String]$BitTitanMigrationScope,
-    [Parameter(Mandatory = $true)] [ValidateSet('Verify', 'PreStage', 'Full', 'RetryErrors', 'Pause', 'Reset')] [String]$BitTitanMigrationType
+    [Parameter(Mandatory = $true)] [ValidateSet('Verify', 'PreStage', 'Full', 'RetryErrors', 'Pause', 'Reset')] [String]$BitTitanMigrationType,
+    [Parameter(Mandatory = $false)] [Boolean]$MigrateToArchive
 )
 
 #######################################################################################################################
@@ -363,5 +364,6 @@ foreach ($user in $users) {
             -BitTitanDestinationEndpointId $BitTitanDestinationPstEndpointId `
             -HomeDirToUserPrincipalNameMapping $user `
             -ApplyUserMigrationBundle $ApplyUserMigrationBundle `
-            -ApplyCustomFolderMapping $ApplyCustomFolderMapping  )
+            -ApplyCustomFolderMapping $ApplyCustomFolderMapping `
+            -MigrateToArchive $MigrateToArchive  )
 }
