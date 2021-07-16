@@ -4495,30 +4495,32 @@ if ($action -ne $null) {
             Write-Host -ForegroundColor Green $msg
 
             Write-Host
-            $msg = "INFO: PST files will be migrated to '$target'."
-            Write-Host -ForegroundColor Green $msg
-
-            Write-Host
             $msg = "INFO: Exit the execution and run 'Get-Variable bt* -Scope Global | Clear-Variable' if you want to use a different 'ExchangeOnline2' endpont."
             Write-Host -ForegroundColor Yellow $msg
         }
 
         if(!$global:btMigrateToArchive ) {
+            Write-Host
             do { 
                 $confirm = (Read-Host -prompt "Do you want to migrate to mailbox or to archive?  [M]ailbox or [A]rchive")    
                 if($confirm.ToLower() -eq "a") {
-                    $target="Archive"
+                    $target = "Archive"
                     $global:btMigrateToArchive = $true
                 }
                 elseif($confirm.ToLower() -eq "m") {
-                    $target="Mailbox"
+                    $target = "Mailbox"
                     $global:btMigrateToArchive = $false
                 }
             } while(($confirm.ToLower() -ne "m") -and ($confirm.ToLower() -ne "a"))
         }
         else{
             Write-Host
-            $msg = "INFO: PST files will be migrated to '$target'."
+            if($global:btMigrateToArchive) {
+                $msg = "INFO: PST files will be migrated to archive mailbox."
+            }
+            else{
+                $msg = "INFO: PST files will be migrated to mailbox."
+            }
             Write-Host -ForegroundColor Green $msg
 
             Write-Host
@@ -4613,7 +4615,7 @@ if ($action -ne $null) {
     -MigrationWizFolderMapping 'MigratedHomeDir' ``
     -OwnAzureStorageAccount `$false ``
     -ApplyUserMigrationBundle `$true ``
-    -MigrateToArchive `$global:btMigrateToArchive  ``
+    -MigrateToArchive $global:btMigrateToArchive  ``
     -BitTitanMigrationScope All ``
     -BitTitanMigrationType Full"  
 
