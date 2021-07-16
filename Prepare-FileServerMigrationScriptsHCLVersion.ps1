@@ -4487,6 +4487,7 @@ if ($action -ne $null) {
 
             $global:importPstEndpointId = Select-MSPC_Endpoint -CustomerOrganizationId $global:btCustomerOrganizationId -ExportOrImport "destination" -EndpointType 'ExchangeOnline2'
 
+
         }
         else {
             Write-Host
@@ -4494,7 +4495,34 @@ if ($action -ne $null) {
             Write-Host -ForegroundColor Green $msg
 
             Write-Host
+            $msg = "INFO: PST files will be migrated to '$target'."
+            Write-Host -ForegroundColor Green $msg
+
+            Write-Host
             $msg = "INFO: Exit the execution and run 'Get-Variable bt* -Scope Global | Clear-Variable' if you want to use a different 'ExchangeOnline2' endpont."
+            Write-Host -ForegroundColor Yellow $msg
+        }
+
+        if(!$global:btMigrateToArchive ) {
+            do { 
+                $confirm = (Read-Host -prompt "Do you want to migrate to mailbox or to archive?  [M]ailbox or [A]rchive")    
+                if($confirm.ToLower() -eq "a") {
+                    $target="Archive"
+                    $global:btMigrateToArchive = $true
+                }
+                elseif($confirm.ToLower() -eq "m") {
+                    $target="Mailbox"
+                    $global:btMigrateToArchive = $false
+                }
+            } while(($confirm.ToLower() -ne "m") -and ($confirm.ToLower() -ne "a"))
+        }
+        else{
+            Write-Host
+            $msg = "INFO: PST files will be migrated to '$target'."
+            Write-Host -ForegroundColor Green $msg
+
+            Write-Host
+            $msg = "INFO: Exit the execution and run 'Get-Variable bt* -Scope Global | Clear-Variable' if you want to use a different target."
             Write-Host -ForegroundColor Yellow $msg
         }
     
@@ -4585,6 +4613,7 @@ if ($action -ne $null) {
     -MigrationWizFolderMapping 'MigratedHomeDir' ``
     -OwnAzureStorageAccount `$false ``
     -ApplyUserMigrationBundle `$true ``
+    -MigrateToArchive `$global:btMigrateToArchive  ``
     -BitTitanMigrationScope All ``
     -BitTitanMigrationType Full"  
 
@@ -4625,3 +4654,4 @@ $msg = "++++++++++++++++++++++++++++++++++++++++ SCRIPT FINISHED +++++++++++++++
 Log-Write -Message $msg 
 
 ##END SCRIPT
+
