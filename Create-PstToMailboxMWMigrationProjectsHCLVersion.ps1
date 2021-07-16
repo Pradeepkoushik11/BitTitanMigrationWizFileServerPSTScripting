@@ -4221,7 +4221,7 @@ foreach ($user in $users) {
 
     write-host 
     $msg = "#######################################################################################################################`
-                    GENERATING PST ASSESSMENT REPORT  '$($HomeDirectorySearchPattern.ToUpper())'                   `
+                    ANALYZING PST FILES IN HOME DIRECTORY  '$($HomeDirectorySearchPattern.ToUpper())'                   `
 #######################################################################################################################"
     Write-Host -ForegroundColor Yellow $msg
     Log-Write -Message "GENERATING PST ASSESSMENT REPORT " 
@@ -4261,10 +4261,6 @@ foreach ($user in $users) {
     
     $fileList = Get-ChildItem "$script:workingDir\PSTMetadata-$containerName" -Filter "*-file.metadata"
     
-    $msg = "INFO: Generating PST assessment report from downloaded metadata files."
-    Write-Host $msg 
-    Log-Write -Message $msg 
-    Write-Host
     
     $msg = "SUCCESS: $($fileList.count) metadata file(s) found in Azure Blob Container and downloaded to '$script:workingDir\PSTMetadata-$containerName\'."
     Write-Host $msg -ForegroundColor Green
@@ -4389,6 +4385,7 @@ foreach ($user in $users) {
 
         foreach ($pstFile in $output) {
 
+            $pstFileName = $pstFile.PSTName
             $pstFilePath = $pstFile.OriginalPSTFolderPath 
             $pstFilePath = $pstFilePath.replace( "$FileServerRootFolderPath\", "")
             $pstFilePath = $pstFilePath.TrimStart("\")
@@ -4401,7 +4398,7 @@ foreach ($user in $users) {
             [string]$CH34 = [CHAR]34
             if ($applyCustomFolderMapping) {
 
-                $folderMapping = "FolderMapping=" + $CH34 + "^->$($pstFilePath -replace('.pst',''))/" + $destinationFolder + $CH34
+                $folderMapping = "FolderMapping=" + $CH34 + "^->$($pstFileName -replace('.pst',''))/" + $destinationFolder + $CH34
             }
 
             $result = Get-MW_Mailbox -ticket $script:MwTicket -ConnectorId $connectorId -PublicFolderPath $pstFilePath -ImportEmailAddress $importEmailAddress -ErrorAction SilentlyContinue
