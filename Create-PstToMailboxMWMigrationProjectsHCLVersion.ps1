@@ -96,7 +96,8 @@ Param
     [Parameter(Mandatory = $false)] [String]$HomeDirectorySearchPattern,
     [Parameter(Mandatory = $false)] [Object]$HomeDirToUserPrincipalNameMapping,
     [Parameter(Mandatory = $false)] [Boolean]$ApplyUserMigrationBundle,
-    [Parameter(Mandatory = $false)] [Boolean]$ApplyCustomFolderMapping
+    [Parameter(Mandatory = $false)] [Boolean]$ApplyCustomFolderMapping,
+    [Parameter(Mandatory = $false)] [Boolean]$MigrateToArchive
 )
 
 
@@ -4338,9 +4339,14 @@ foreach ($user in $users) {
         $ProjectType = "Archive"   
         $exportType = "Pst" 
         $importType = "ExchangeOnline2"
-    
-        
 
+        if($MigrateToArchive) {
+            $target="Archive"
+        }
+        else {
+            $target="Mailbox"
+        }
+        
         $exportTypeName = "MigrationProxy.WebApi.AzureConfiguration"
         $exportConfiguration = New-Object -TypeName $exportTypeName -Property @{
             "AdministrativeUsername"       = $exportEndpointData.AdministrativeUsername;
@@ -4353,7 +4359,8 @@ foreach ($user in $users) {
         $importConfiguration = New-Object -TypeName $importTypeName -Property @{
             "AdministrativeUsername"       = $importAdministrativeUsername;
             "AdministrativePassword"       = $importAdministrativePassword;
-            "UseAdministrativeCredentials" = $true;           
+            "UseAdministrativeCredentials" = $true;        
+            "ExchangeItemType" = $target   
         }
 
    
