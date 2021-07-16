@@ -113,6 +113,7 @@ Param
     [Parameter(Mandatory = $true)] [String]$BitTitanSourceEndpointId,
     [Parameter(Mandatory = $true)] [String]$BitTitanSourcePstEndpointId,
     [Parameter(Mandatory = $true)] [String]$AzureStorageAccessKey,
+    [Parameter(Mandatory = $false)] [String]$AzureSubscriptionID,
     [Parameter(Mandatory = $true)] [String]$BitTitanDestinationEndpointId,
     [Parameter(Mandatory = $true)] [String]$BitTitanDestinationPstEndpointId,
     [Parameter(Mandatory = $true)] [String]$FileServerRootFolderPath,
@@ -354,6 +355,7 @@ foreach ($user in $users) {
             -BitTitanCustomerId $BitTitanCustomerId `
             -BitTitanSourceEndpointId  $BitTitanSourcePstEndpointId `
             -AzureStorageAccessKey $AzureStorageAccessKey `
+            -AzureSubscriptionID $AzureSubscriptionID `
             -FileServerRootFolderPath $FileServerRootFolderPath `
             -HomeDirectorySearchPattern $user.SourceFolder  `
             -CheckFileServer $CheckFileServer `
