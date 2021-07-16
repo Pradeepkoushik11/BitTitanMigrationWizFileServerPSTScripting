@@ -4424,6 +4424,23 @@ if ($action -ne $null) {
             Write-Host -ForegroundColor Yellow $msg
         }
 
+        if (!$global:btAzureSubscriptionID) {
+            #Get Azure Storage Primary Access Key source endpoint
+            Write-Host
+            do {
+                $global:btAzureSubscriptionID = (Read-Host -prompt "Please enter the Azure subscription ID").trim()
+            }while ($global:btAzureSubscriptionID -eq "")
+        }
+        else {
+            Write-Host
+            $msg = "INFO: Already selected Azure subscription ID '$global:btAzureSubscriptionID'."
+            Write-Host -ForegroundColor Green $msg
+
+            Write-Host
+            $msg = "INFO: Exit the execution and run 'Get-Variable bt* -Scope Global | Clear-Variable' if you want to use a different Azure Storage Account Primary Access Key."
+            Write-Host -ForegroundColor Yellow $msg
+        }
+
         if (!$global:btRootPath) {
             #Get folder path to the FileServer root
             Write-host 
@@ -4557,6 +4574,7 @@ if ($action -ne $null) {
     -downloadLatestVersion `$false ``
     -BitTitanAzureDatacenter $global:btZoneRequirement ``
     -AzureStorageAccessKey $global:btSecretKey ``
+    -AzureSubscriptionID $global:btAzureSubscriptionID ``
     -FileServerRootFolderPath '$global:btRootPath' ``
     -BitTitanSourceEndpointId  $global:exportEndpointId ``
     -BitTitanSourcePstEndpointId  $global:exportPstEndpointId ``
