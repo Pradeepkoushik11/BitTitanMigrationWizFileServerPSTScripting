@@ -4486,10 +4486,7 @@ foreach ($user in $users) {
                 Log-Write -Message $msg 
             }
         }
-        else {     
-            $msg = "ERROR: No PST file information found on file $($file.Name). Script will abort."
-            Write-Host -ForegroundColor Red $msg
-        }
+
     }
 
     if ($output) {
@@ -4561,10 +4558,10 @@ foreach ($user in $users) {
                 $folderMapping = "FolderMapping=" + $CH34 + "^>$pstFilePath/" + $destinationFolder + $CH34
             }
 
-            $result = Get-MW_Mailbox -ticket $script:MwTicket -ConnectorId $connectorId -PublicFolderPath $pstFilePath -ImportEmailAddress $importEmailAddress -advancedOptions $folderMapping -ErrorAction SilentlyContinue
+            $result = Get-MW_Mailbox -ticket $script:MwTicket -ConnectorId $connectorId -PublicFolderPath $pstFilePath -ImportEmailAddress $importEmailAddress -ErrorAction SilentlyContinue
             if (!$result) {
                 try {
-                    $suppressOutput = Add-MW_Mailbox -ticket $script:MwTicket -ConnectorId $connectorId -PublicFolderPath $pstFilePath -ImportEmailAddress $importEmailAddress
+                    $suppressOutput = Add-MW_Mailbox -ticket $script:MwTicket -ConnectorId $connectorId -PublicFolderPath $pstFilePath -ImportEmailAddress $importEmailAddress -advancedOptions $folderMapping
 
                     $tab = [char]9
                     $msg = "SUCCESS: PST migration '$pstFilePath->$importEmailAddress' of HomeDir '$SourceFolder' added to the project $ProjectName."
@@ -4681,6 +4678,10 @@ foreach ($user in $users) {
                 Continue    
             }         
         }              
+    }
+    else {     
+        $msg = "ERROR: No PST file information found on file $($file.Name). Script will skip."
+        Write-Host -ForegroundColor Red $msg
     }
 }
 
