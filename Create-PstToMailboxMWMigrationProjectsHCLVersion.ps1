@@ -3537,7 +3537,7 @@ write-host
 
 write-host 
 $msg = "#######################################################################################################################`
-                       SELECT WORKING DIRECTORY                  `
+                       SELECT WORKING DIRECTORY  '$($HomeDirectorySearchPattern.ToUpper())'                   `
 #######################################################################################################################"
 Write-Host -ForegroundColor Yellow $msg
 write-host 
@@ -3590,7 +3590,7 @@ Log-Write -Message $msg
 
 write-host 
 $msg = "#######################################################################################################################`
-                       CONNECTION TO YOUR BITTITAN ACCOUNT                  `
+                       CONNECTION TO YOUR BITTITAN ACCOUNT  '$($HomeDirectorySearchPattern.ToUpper())'                   `
 #######################################################################################################################"
 Write-Host -ForegroundColor Yellow $msg
 Log-Write -Message "CONNECTION TO YOUR BITTITAN ACCOUNT" 
@@ -3600,7 +3600,7 @@ Connect-BitTitan
 
 write-host 
 $msg = "#######################################################################################################################`
-                       AZURE CLOUD SELECTION                 `
+                       AZURE CLOUD SELECTION  '$($HomeDirectorySearchPattern.ToUpper())'                     `
 #######################################################################################################################"
 Write-Host -ForegroundColor Yellow $msg
 Write-Host
@@ -3717,7 +3717,7 @@ else {
 
 write-host 
 $msg = "#######################################################################################################################`
-                       WORKGROUP AND CUSTOMER SELECTION              `
+                       WORKGROUP AND CUSTOMER SELECTION  '$($HomeDirectorySearchPattern.ToUpper())'               `
 #######################################################################################################################"
 Write-Host -ForegroundColor Yellow $msg
 Log-Write -Message "WORKGROUP AND CUSTOMER SELECTION"   
@@ -3810,7 +3810,7 @@ catch {
 
 write-host 
 $msg = "#######################################################################################################################`
-                       UPLOADERWIZ DOWNLOAD AND UNZIPPING              `
+                       UPLOADERWIZ DOWNLOAD AND UNZIPPING  '$($HomeDirectorySearchPattern.ToUpper())'                `
 #######################################################################################################################"
 Write-Host -ForegroundColor Yellow $msg
 Log-Write -Message "AZURE AND FILE SYSTEM ENDPOINT SELECTION"   
@@ -3895,7 +3895,7 @@ if ($downloadUploaderWiz) {
 
 write-host 
 $msg = "#######################################################################################################################`
-                       AZURE AND PST ENDPOINT SELECTION              `
+                       AZURE AND PST ENDPOINT SELECTION  '$($HomeDirectorySearchPattern.ToUpper())'               `
 #######################################################################################################################"
 Write-Host -ForegroundColor Yellow $msg
 Log-Write -Message "AZURE AND PST ENDPOINT SELECTION"   
@@ -4033,7 +4033,7 @@ else {
 #if (!$skipAzureCheck) {
 write-host 
 $msg = "#######################################################################################################################`
-                    CONNECTION TO YOUR AZURE ACCOUNT                  `
+                    CONNECTION TO YOUR AZURE ACCOUNT  '$($HomeDirectorySearchPattern.ToUpper())'                   `
 #######################################################################################################################"
 Write-Host -ForegroundColor Yellow $msg
 Log-Write -Message "CONNECTION TO YOUR AZURE ACCOUNT" 
@@ -4080,7 +4080,7 @@ else {
 
 write-host 
 $msg = "#######################################################################################################################`
-                       SELECTING MAILBOXES                 `
+                       SELECTING MAILBOXES  '$($HomeDirectorySearchPattern.ToUpper())'                  `
 #######################################################################################################################"
 Write-Host -ForegroundColor Yellow $msg
 Log-Write -Message "SELECTING MAILBOXES" 
@@ -4273,7 +4273,7 @@ Catch [Exception] {
 
 write-host 
 $msg = "#######################################################################################################################`
-                       MIGRATIONWIZ PST->MAILBOX PROJECT CREATION                 `
+                       MIGRATIONWIZ PST->MAILBOX PROJECT CREATION  '$($HomeDirectorySearchPattern.ToUpper())'                   `
 #######################################################################################################################"
 Write-Host -ForegroundColor Yellow $msg
 Log-Write -Message "MIGRATIONWIZ PST->MAILBOX PROJECT CREATION" 
@@ -4375,7 +4375,7 @@ foreach ($user in $users) {
 
     write-host 
     $msg = "#######################################################################################################################`
-                    GENERATING PST ASSESSMENT REPORT                  `
+                    GENERATING PST ASSESSMENT REPORT  '$($HomeDirectorySearchPattern.ToUpper())'                   `
 #######################################################################################################################"
     Write-Host -ForegroundColor Yellow $msg
     Log-Write -Message "GENERATING PST ASSESSMENT REPORT " 
