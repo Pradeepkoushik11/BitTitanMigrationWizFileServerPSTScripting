@@ -342,7 +342,8 @@ foreach ($user in $users) {
             -HomeDirToUserPrincipalNameMapping $user `
             -MigrationWizFolderMapping $MigrationWizFolderMapping `
             -OwnAzureStorageAccount $OwnAzureStorageAccount `
-            -ApplyUserMigrationBundle $ApplyUserMigrationBundle   )
+            -ApplyUserMigrationBundle $ApplyUserMigrationBundle `
+            -ApplyCustomFolderMapping $ApplyCustomFolderMapping  )
 
     .\Start-MWMigrationsFromCSVFileHCLVersion.ps1 -BitTitanWorkGroupId $BitTitanWorkGroupId `
         -BitTitanCustomerId $BitTitanCustomerId `
@@ -364,5 +365,6 @@ foreach ($user in $users) {
             -HomeDirToUserPrincipalNameMapping $user `
             -MigrationWizFolderMapping $MigrationWizFolderMapping `
             -OwnAzureStorageAccount $OwnAzureStorageAccount `
-            -ApplyUserMigrationBundle $ApplyUserMigrationBundle   )
+            -ApplyUserMigrationBundle $ApplyUserMigrationBundle `
+            -ApplyCustomFolderMapping $ApplyCustomFolderMapping  )
 }
