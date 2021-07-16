@@ -110,7 +110,8 @@ Param
     [Parameter(Mandatory = $false)] [Object]$HomeDirToUserPrincipalNameMapping,
     [Parameter(Mandatory = $false)] [String]$MigrationWizFolderMapping,
     [Parameter(Mandatory = $false)] [Boolean]$OwnAzureStorageAccount,
-    [Parameter(Mandatory = $false)] [Boolean]$ApplyUserMigrationBundle
+    [Parameter(Mandatory = $false)] [Boolean]$ApplyUserMigrationBundle,
+    [Parameter(Mandatory = $false)] [Boolean]$ApplyCustomFolderMapping
 )
 
 
