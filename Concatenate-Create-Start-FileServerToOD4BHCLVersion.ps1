@@ -360,12 +360,8 @@ foreach ($user in $users) {
             -AzureSubscriptionID $AzureSubscriptionID `
             -FileServerRootFolderPath $FileServerRootFolderPath `
             -HomeDirectorySearchPattern $user.SourceFolder  `
-            -CheckFileServer $CheckFileServer `
             -BitTitanDestinationEndpointId $BitTitanDestinationPstEndpointId `
-            -CheckOneDriveAccounts $CheckOneDriveAccounts `
             -HomeDirToUserPrincipalNameMapping $user `
-            -MigrationWizFolderMapping $MigrationWizFolderMapping `
-            -OwnAzureStorageAccount $OwnAzureStorageAccount `
             -ApplyUserMigrationBundle $ApplyUserMigrationBundle `
             -ApplyCustomFolderMapping $ApplyCustomFolderMapping  )
 }
