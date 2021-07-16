@@ -4527,6 +4527,28 @@ if ($action -ne $null) {
             $msg = "INFO: Exit the execution and run 'Get-Variable bt* -Scope Global | Clear-Variable' if you want to use a different target."
             Write-Host -ForegroundColor Yellow $msg
         }
+
+        if(!$global:btApplyCustomFolderMapping ) {
+            Write-Host
+            do { 
+                $confirm = (Read-Host -prompt "Do you want to migrate the PST files under a folder with the original PST file name?  [Y]es or [N]o")    
+                if($confirm.ToLower() -eq "y") {
+                    $global:btApplyCustomFolderMapping = $true
+                }
+                elseif($confirm.ToLower() -eq "n") {
+                    $global:btApplyCustomFolderMapping = $false
+                }
+            } while(($confirm.ToLower() -ne "y") -and ($confirm.ToLower() -ne "n"))
+        }
+        else{
+            Write-Host
+            $msg = "INFO: PST files under a folder with the original PST file name."        
+            Write-Host -ForegroundColor Green $msg
+
+            Write-Host
+            $msg = "INFO: Exit the execution and run 'Get-Variable bt* -Scope Global | Clear-Variable' if you want to change the PST folder mapping."
+            Write-Host -ForegroundColor Yellow $msg
+        }
     
         write-host 
         $msg = "#######################################################################################################################`
@@ -4616,6 +4638,7 @@ if ($action -ne $null) {
     -OwnAzureStorageAccount `$false ``
     -ApplyUserMigrationBundle `$true ``
     -MigrateToArchive `$$global:btMigrateToArchive  ``
+    -ApplyCustomFolderMapping `$$global:btApplyCustomFolderMapping  ``
     -BitTitanMigrationScope All ``
     -BitTitanMigrationType Full"  
 
