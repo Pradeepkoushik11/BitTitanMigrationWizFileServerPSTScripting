@@ -68,18 +68,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
     This parameter defines which projects you want to process, based on the project name search term. There is no limit on the number of characters you define on the search term.
     This parameter is optional. If you don't specify a project search term, all projects in the customer will be processed.
     Example: to process all projects starting with "Batch" you enter '-ProjectSearchTerm Batch'  
-.PARAMETER CheckFileServer
-    This parameter defines if the script must analyze the file server and remove all invalid characters both in Azure blob container and in OneDrive. 
-    This parameter is optional. If you don't specify the parameter with true value, the file server folder and file names won´t be analyzed and invalid characters won´t be removed.
-.PARAMETER CheckOneDriveAccounts
-    This parameter defines if the home directory name exist as a OneDrive for Business account (Home Directory name = User Principal Name prefix).
-    This parameter is mandatory. If you don't specify the paramter with a true value, you have to specify a CSV file name with the home directory and OneDrive for Business mapping.
-.PARAMETER MigrationWizFolderMapping
-    This parameter defines if the home directory must be migrated under a destination subfolder.
-    This parameter is optional. If you don't specify the parameter with the destination subfolder name, the home directory will be directly migrated under the OneDrive.
-.PARAMETER OwnAzureStorageAccount
-    This parameter defines if the destination endpoint must use the custom Azure storage account specified in the endpoint.
-    This parameter is optional. If you don't specify the parameter with true value, the destination endpoint will use the Microsoft provided Azure storage.
 .PARAMETER ApplyUserMigrationBundle
     This parameter defines if the migration added to the MigrationWiz project must be licensed with an existing User Migration Bundle.
     This parameter is optional. If you don't specify the parameter with true value, the migration won't be automatically licensed. 
@@ -106,10 +94,7 @@ Param
     [Parameter(Mandatory = $false)] [String]$BitTitanDestinationEndpointId,
     [Parameter(Mandatory = $false)] [String]$FileServerRootFolderPath,
     [Parameter(Mandatory = $false)] [String]$HomeDirectorySearchPattern,
-    [Parameter(Mandatory = $false)] [Boolean]$CheckFileServer,
-    [Parameter(Mandatory = $false)] [Boolean]$CheckOneDriveAccounts,
     [Parameter(Mandatory = $false)] [Object]$HomeDirToUserPrincipalNameMapping,
-    [Parameter(Mandatory = $false)] [Boolean]$OwnAzureStorageAccount,
     [Parameter(Mandatory = $false)] [Boolean]$ApplyUserMigrationBundle,
     [Parameter(Mandatory = $false)] [Boolean]$ApplyCustomFolderMapping
 )
