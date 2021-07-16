@@ -4385,7 +4385,7 @@ foreach ($user in $users) {
 
         foreach ($pstFile in $output) {
 
-            $pstFileName = $pstFile.PSTName
+            $pstFileName = $pstFile.OriginalPSTName
             $pstFilePath = $pstFile.OriginalPSTFolderPath 
             $pstFilePath = $pstFilePath.replace( "$FileServerRootFolderPath\", "")
             $pstFilePath = $pstFilePath.TrimStart("\")
