@@ -4615,7 +4615,7 @@ if ($action -ne $null) {
     -MigrationWizFolderMapping 'MigratedHomeDir' ``
     -OwnAzureStorageAccount `$false ``
     -ApplyUserMigrationBundle `$true ``
-    -MigrateToArchive `$($global:btMigrateToArchive)  ``
+    -MigrateToArchive `$$global:btMigrateToArchive  ``
     -BitTitanMigrationScope All ``
     -BitTitanMigrationType Full"  
 
