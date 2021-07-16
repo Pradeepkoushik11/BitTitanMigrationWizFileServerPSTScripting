@@ -3597,7 +3597,7 @@ write-host
 
 write-host 
 $msg = "#######################################################################################################################`
-                       SELECT WORKING DIRECTORY                  `
+                       SELECT WORKING DIRECTORY  '$($HomeDirectorySearchPattern.ToUpper())'                    `
 #######################################################################################################################"
 Write-Host $msg
 write-host 
@@ -3650,7 +3650,7 @@ Log-Write -Message $msg
 
 write-host 
 $msg = "#######################################################################################################################`
-                       CONNECTION TO YOUR BITTITAN ACCOUNT                  `
+                       CONNECTION TO YOUR BITTITAN ACCOUNT  '$($HomeDirectorySearchPattern.ToUpper())'                    `
 #######################################################################################################################"
 Write-Host $msg
 Log-Write -Message "CONNECTION TO YOUR BITTITAN ACCOUNT" 
@@ -3660,7 +3660,7 @@ Connect-BitTitan
 
 write-host 
 $msg = "#######################################################################################################################`
-                       AZURE CLOUD SELECTION                 `
+                       AZURE CLOUD SELECTION  '$($HomeDirectorySearchPattern.ToUpper())'                  `
 #######################################################################################################################"
 Write-Host $msg
 Write-Host
@@ -3777,7 +3777,7 @@ else {
 
 write-host 
 $msg = "#######################################################################################################################`
-                       WORKGROUP AND CUSTOMER SELECTION              `
+                       WORKGROUP AND CUSTOMER SELECTION  '$($HomeDirectorySearchPattern.ToUpper())'               `
 #######################################################################################################################"
 Write-Host $msg
 Log-Write -Message "WORKGROUP AND CUSTOMER SELECTION"   
@@ -3870,7 +3870,7 @@ catch {
 
 write-host 
 $msg = "#######################################################################################################################`
-                       UPLOADERWIZ DOWNLOAD AND UNZIPPING              `
+                       UPLOADERWIZ DOWNLOAD AND UNZIPPING  '$($HomeDirectorySearchPattern.ToUpper())'               `
 #######################################################################################################################"
 Write-Host $msg
 Log-Write -Message "AZURE AND FILE SYSTEM ENDPOINT SELECTION"   
@@ -3955,7 +3955,7 @@ if ($downloadUploaderWiz) {
 
 write-host 
 $msg = "#######################################################################################################################`
-                       AZURE AND FILE SYSTEM ENDPOINT SELECTION              `
+                       AZURE AND FILE SYSTEM ENDPOINT SELECTION  '$($HomeDirectorySearchPattern.ToUpper())'               `
 #######################################################################################################################"
 Write-Host $msg
 Log-Write -Message "AZURE AND FILE SYSTEM ENDPOINT SELECTION"   
@@ -4082,7 +4082,7 @@ if ([string]::IsNullOrEmpty($AzureStorageAccessKey)) {
     if (!$skipAzureCheck) {
         write-host 
         $msg = "#######################################################################################################################`
-                    CONNECTION TO YOUR AZURE ACCOUNT                  `
+                    CONNECTION TO YOUR AZURE ACCOUNT  '$($HomeDirectorySearchPattern.ToUpper())'                   `
 #######################################################################################################################"
         Write-Host $msg
         Log-Write -Message "CONNECTION TO YOUR AZURE ACCOUNT" 
@@ -4129,7 +4129,7 @@ if ([string]::IsNullOrEmpty($AzureStorageAccessKey)) {
 
 write-host 
 $msg = "#######################################################################################################################`
-                       UPLOADERWIZ CONFIGURATION AND FILE SERVER REMEDIATION               `
+                       UPLOADERWIZ CONFIGURATION AND FILE SERVER REMEDIATION  '$($HomeDirectorySearchPattern.ToUpper())'                `
 #######################################################################################################################"
 Write-Host $msg
 Log-Write -Message "UPLOADERWIZ CONFIGURATION AND FILE SERVER REMEDIATION" 
@@ -4301,7 +4301,7 @@ else {
 
 write-host 
 $msg = "#######################################################################################################################`
-                       UPLOADERWIZ EXECUTION               `
+                       UPLOADERWIZ EXECUTION  '$($HomeDirectorySearchPattern.ToUpper())'                `
 #######################################################################################################################"
 Write-Host $msg
 Log-Write -Message "UPLOADERWIZ EXECUTION" 
@@ -4361,7 +4361,7 @@ if ([string]::IsNullOrEmpty($FileServerRootFolderPath)) {
 
 write-host 
 $msg = "#######################################################################################################################`
-                       SELECTING ONEDRIVE FOR BUSINESS ACCOUNTS                 `
+                       SELECTING ONEDRIVE FOR BUSINESS ACCOUNTS  '$($HomeDirectorySearchPattern.ToUpper())'                  `
 #######################################################################################################################"
 Write-Host $msg
 Log-Write -Message "SELECTING ONEDRIVE FOR BUSINESS ACCOUNTS " 
@@ -4554,7 +4554,7 @@ Catch [Exception] {
 
 write-host 
 $msg = "#######################################################################################################################`
-                       MIGRATIONWIZ PROJECT CREATION                 `
+                       MIGRATIONWIZ PROJECT CREATION  '$($HomeDirectorySearchPattern.ToUpper())'                  `
 #######################################################################################################################"
 Write-Host $msg
 Log-Write -Message "MIGRATIONWIZ PROJECT CREATION" 
