@@ -102,6 +102,7 @@ Param
     [Parameter(Mandatory = $false)] [String]$BitTitanCustomerId,
     [Parameter(Mandatory = $false)] [String]$BitTitanSourceEndpointId,
     [Parameter(Mandatory = $false)] [String]$AzureStorageAccessKey,
+    [Parameter(Mandatory = $false)] [String]$AzureSubscriptionID,
     [Parameter(Mandatory = $false)] [String]$BitTitanDestinationEndpointId,
     [Parameter(Mandatory = $false)] [String]$FileServerRootFolderPath,
     [Parameter(Mandatory = $false)] [String]$HomeDirectorySearchPattern,
@@ -3972,10 +3973,15 @@ if ([string]::IsNullOrEmpty($AzureStorageAccessKey) -or !$global:btAzureCredenti
             $global:btAzureCredentials = New-Object System.Management.Automation.PSCredential ($administrativeUsername, $AzureAccountPassword)
         }
 
-        if (!$global:btAzureSubscriptionID) {
-            do {
-                $global:btAzureSubscriptionID = (Read-Host -prompt "Please enter the Azure Subscription ID").trim()
-            }while ($global:btAzureSubscriptionID -eq "")
+        if (!$AzureSubscriptionID) {
+            if (!$global:btAzureSubscriptionID) {
+                do {
+                    $global:btAzureSubscriptionID = (Read-Host -prompt "Please enter the Azure Subscription ID").trim()
+                }while ($global:btAzureSubscriptionID -eq "")
+            }
+        }
+        else {
+            $global:btAzureSubscriptionID = $AzureSubscriptionID
         }
 
         if ($AzureStorageAccessKey) {
