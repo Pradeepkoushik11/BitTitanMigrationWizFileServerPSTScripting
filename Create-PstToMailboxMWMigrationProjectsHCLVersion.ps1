@@ -4401,7 +4401,7 @@ foreach ($user in $users) {
             [string]$CH34 = [CHAR]34
             if ($applyCustomFolderMapping) {
 
-                $folderMapping = "FolderMapping=" + $CH34 + "^->$($pstFilePath -replace('.pst',''))) /" + $destinationFolder + $CH34
+                $folderMapping = "FolderMapping=" + $CH34 + "^->$($pstFilePath -replace('.pst',''))/" + $destinationFolder + $CH34
             }
 
             $result = Get-MW_Mailbox -ticket $script:MwTicket -ConnectorId $connectorId -PublicFolderPath $pstFilePath -ImportEmailAddress $importEmailAddress -ErrorAction SilentlyContinue
