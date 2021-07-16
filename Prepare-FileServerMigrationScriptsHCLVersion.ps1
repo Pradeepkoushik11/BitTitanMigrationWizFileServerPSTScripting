@@ -4375,13 +4375,13 @@ if ($action -ne $null) {
 
         #Create SPO Team Sites Document project
 
-        if (!$global:exportEndpointId) {
+        if (!$global:btExportEndpointId) {
             #Select source endpoint
-            $global:exportEndpointId = Select-MSPC_Endpoint -CustomerOrganizationId $global:btCustomerOrganizationId -ExportOrImport "source" -EndpointType 'AzureFileSystem'
+            $global:btExportEndpointId = Select-MSPC_Endpoint -CustomerOrganizationId $global:btCustomerOrganizationId -ExportOrImport "source" -EndpointType 'AzureFileSystem'
         }
         else {
             Write-Host
-            $msg = "INFO: Already selected 'AzureFileSystem' endpont '$global:exportEndpointId'."
+            $msg = "INFO: Already selected 'AzureFileSystem' endpont '$global:btExportEndpointId'."
             Write-Host -ForegroundColor Green $msg
 
             Write-Host
@@ -4389,13 +4389,13 @@ if ($action -ne $null) {
             Write-Host -ForegroundColor Yellow $msg
         }
 
-        if (!$global:exportPstEndpointId) {
+        if (!$global:btExportPstEndpointId) {
             #Select source endpoint
-            $global:exportPstEndpointId = Select-MSPC_Endpoint -CustomerOrganizationId $global:btCustomerOrganizationId -ExportOrImport "source" -EndpointType 'Pst'
+            $global:btExportPstEndpointId = Select-MSPC_Endpoint -CustomerOrganizationId $global:btCustomerOrganizationId -ExportOrImport "source" -EndpointType 'Pst'
         }
         else {
             Write-Host
-            $msg = "INFO: Already selected 'Pst' endpont '$global:exportPstEndpointId'."
+            $msg = "INFO: Already selected 'Pst' endpont '$global:btExportPstEndpointId'."
             Write-Host -ForegroundColor Green $msg
 
             Write-Host
@@ -4468,30 +4468,30 @@ if ($action -ne $null) {
             $msg = "INFO: Exit the execution and run 'Get-Variable bt* -Scope Global | Clear-Variable' if you want to use a different folder path to the FileServer root."
             Write-Host -ForegroundColor Yellow $msg
         }
-        if (!$global:importEndpointId) {
+        if (!$global:btImportEndpointId) {
             #Select destination endpoint
-            $global:importEndpointId = Select-MSPC_Endpoint -CustomerOrganizationId $global:btCustomerOrganizationId -ExportOrImport "destination" -EndpointType 'OneDriveProAPI'
+            $global:btImportEndpointId = Select-MSPC_Endpoint -CustomerOrganizationId $global:btCustomerOrganizationId -ExportOrImport "destination" -EndpointType 'OneDriveProAPI'
 
         }
         else {
             Write-Host
-            $msg = "INFO: Already selected 'OneDriveProAPI' endpont '$global:importEndpointId'."
+            $msg = "INFO: Already selected 'OneDriveProAPI' endpont '$global:btImportEndpointId'."
             Write-Host -ForegroundColor Green $msg
 
             Write-Host
             $msg = "INFO: Exit the execution and run 'Get-Variable bt* -Scope Global | Clear-Variable' if you want to use a different 'OneDriveProAPI' endpont."
             Write-Host -ForegroundColor Yellow $msg
         }
-        if (!$global:importPstEndpointId) {
+        if (!$global:btImportPstEndpointId) {
             #Select destination PST endpoint
 
-            $global:importPstEndpointId = Select-MSPC_Endpoint -CustomerOrganizationId $global:btCustomerOrganizationId -ExportOrImport "destination" -EndpointType 'ExchangeOnline2'
+            $global:btImportPstEndpointId = Select-MSPC_Endpoint -CustomerOrganizationId $global:btCustomerOrganizationId -ExportOrImport "destination" -EndpointType 'ExchangeOnline2'
 
 
         }
         else {
             Write-Host
-            $msg = "INFO: Already selected 'ExchangeOnline2' endpont '$global:importPstEndpointId'."
+            $msg = "INFO: Already selected 'ExchangeOnline2' endpont '$global:btImportPstEndpointId'."
             Write-Host -ForegroundColor Green $msg
 
             Write-Host
@@ -4604,10 +4604,10 @@ if ($action -ne $null) {
     -BitTitanAzureDatacenter $global:btZoneRequirement ``
     -AzureStorageAccessKey $global:btSecretKey ``
     -FileServerRootFolderPath '$global:btRootPath' ``
-    -BitTitanSourceEndpointId  $global:exportEndpointId ``
-    -BitTitanSourcePstEndpointId  $global:exportPstEndpointId ``
-    -BitTitanDestinationEndpointId $global:importEndpointId ``
-    -BitTitanDestinationPstEndpointId $global:importPstEndpointId ``
+    -BitTitanSourceEndpointId  $global:btExportEndpointId ``
+    -BitTitanSourcePstEndpointId  $global:btExportPstEndpointId ``
+    -BitTitanDestinationEndpointId $global:btImportEndpointId ``
+    -BitTitanDestinationPstEndpointId $global:btImportPstEndpointId ``
     -CheckFileServer `$true ``
     -CheckOneDriveAccounts `$false ``
     -MigrationWizFolderMapping 'MigratedHomeDir' ``
@@ -4628,10 +4628,10 @@ if ($action -ne $null) {
     -AzureStorageAccessKey $global:btSecretKey ``
     -AzureSubscriptionID $global:btAzureSubscriptionID ``
     -FileServerRootFolderPath '$global:btRootPath' ``
-    -BitTitanSourceEndpointId  $global:exportEndpointId ``
-    -BitTitanSourcePstEndpointId  $global:exportPstEndpointId ``
-    -BitTitanDestinationEndpointId $global:importEndpointId ``
-    -BitTitanDestinationPstEndpointId $global:importPstEndpointId ``
+    -BitTitanSourceEndpointId  $global:btExportEndpointId ``
+    -BitTitanSourcePstEndpointId  $global:btExportPstEndpointId ``
+    -BitTitanDestinationEndpointId $global:btImportEndpointId ``
+    -BitTitanDestinationPstEndpointId $global:btImportPstEndpointId ``
     -CheckFileServer `$true ``
     -CheckOneDriveAccounts `$false ``
     -MigrationWizFolderMapping 'MigratedHomeDir' ``
