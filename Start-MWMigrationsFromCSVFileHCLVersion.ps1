@@ -1911,12 +1911,12 @@ Function Menu-MigrationSubmission() {
         switch ($currentStatus) {
             "NotMigrated" {            
                 
-                if ($mailbox.ExportType -eq "Pst" -and $blockPstSubmission) {  
+                <#if ($mailbox.ExportType -eq "Pst" -and $blockPstSubmission) {  
                     $msg = "INFO: PST migration '$($mailbox.ImportEmailAddress)' in '$projectName' already in progress. Skipping additional PST submission."
                     Write-Host -ForegroundColor Red  $msg
 
                     Continue
-                }
+                }#>
                 
                 if ($statusAction -eq 0 -or $statusAction -eq 1 -or $statusAction -eq 5) {
                     $submit = $true
@@ -2733,6 +2733,8 @@ Function Menu-MigrationSubmission() {
             }
         }
     } 
+
+    Write-Progress -Activity " " -Completed
 
     Write-Host
     if (!$blockSubmission) {
