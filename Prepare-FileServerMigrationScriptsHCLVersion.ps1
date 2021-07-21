@@ -54,7 +54,7 @@ function Import-MigrationWizPowerShellModule {
     $version = (get-host | select-object Version).version
     Write-host -ForegroundColor Magenta "PowerShell version installed: $($version.Major).$($version.Minor).$($version.Build).$($version.Revision)"
 
-    if ($version.Major -lt 5) {
+    if($version.Major -lt 5) {
         Write-host -ForegroundColor Yellow "ACTION: Install at least PowerShell 5.0. Script aborted."
         Write-host
 
@@ -3976,7 +3976,7 @@ Function Remove-MW_Connectors {
 function DownloadGitHubRepository { 
     param( 
         [Parameter(Mandatory = $false)] 
-        [string] $Name = "BitTitanMigrationWizFileServerPSTScripting", 
+        [string] $Name = "BitTitanMigrationWizFileServerScripting", 
          
         [Parameter(Mandatory = $false)] 
         [string] $Author = "pablogalan1981", 
@@ -3989,11 +3989,10 @@ function DownloadGitHubRepository {
     ) 
     
     Write-Host
-    Write-Host "Downloading 4 PowerShell Scripts from GitHub repository:
-- Concatenate-Create-Start-FileServerToOD4BHCLVersion.ps1
-- Create-FileServerToOD4BMWMigrationProjectsHCLVersion.ps1
-- Create-PstToMailboxMWMigrationProjectsHCLVersion.ps1
-- Start-MWMigrationsFromCSVFileHCLVersion.ps1"
+    Write-Host "Downloading 3 PowerShell Scripts from GitHub repository:
+- Concatenate-Create-Start-FileServerToOD4B.ps1
+- Create-FileServerToOD4BMWMigrationProjects.ps1
+- Start-MWMigrationsFromCSVFile.ps1"
 
 
     Write-Host 'Starting downloading the GitHub Repository'
@@ -4017,7 +4016,7 @@ function DownloadGitHubRepository {
         Write-Host -ForegroundColor Red 'ERROR: executing Invoke-RestMethod.'
 
         Write-Host
-        Write-Host -ForegroundColor Yellow "ACTION: Download all files in https://github.com/pablogalan1981/BitTitanMigrationWizFileServerPSTScripting to $Location"
+        Write-Host -ForegroundColor Yellow "ACTION: Download all files in https://github.com/pablogalan1981/BitTitanMigrationWizFileServerScripting to $Location"
 
         Write-Host
         WaitForKeyPress
@@ -4373,24 +4372,43 @@ if ($action -ne $null) {
         Write-Host $msg
         Log-Write -Message "ENDPOINT SELECTION" 
 
-        Write-Host
-        $msg = "INFO: Getting the connection information for the FileServer Home Directories and Azure Storage Account."
-        Write-Host $msg
-        Log-Write -Message $msg  
+        #Create SPO Team Sites Document project
 
-        if (!$global:btExportEndpointId) {
+        if (!$global:exportEndpointId) {
             #Select source endpoint
-            $global:btExportEndpointId = Select-MSPC_Endpoint -CustomerOrganizationId $global:btCustomerOrganizationId -ExportOrImport "source" -EndpointType 'AzureFileSystem'
+            $global:exportEndpointId = Select-MSPC_Endpoint -CustomerOrganizationId $global:btCustomerOrganizationId -ExportOrImport "source" -EndpointType 'AzureFileSystem'
         }
         else {
             Write-Host
-            $msg = "INFO: Already selected 'AzureFileSystem' endpont '$global:btExportEndpointId'."
+            $msg = "INFO: Already selected 'AzureFileSystem' endpont '$global:btWorkgroupId'."
             Write-Host -ForegroundColor Green $msg
 
             Write-Host
             $msg = "INFO: Exit the execution and run 'Get-Variable bt* -Scope Global | Clear-Variable' if you want to use a different 'AzureFileSystem' endpont."
             Write-Host -ForegroundColor Yellow $msg
         }
+
+        if (!$global:btSecretKey) {
+            #Get Azure Storage Primary Access Key source endpoint
+            Write-Host
+            do {
+                $script:secretKeySecureString = (Read-Host -prompt "Please enter the Azure Storage Account Primary Access Key" -AsSecureString)
+    
+                $BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($script:secretKeySecureString)
+                $global:btSecretKey = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
+    
+            }while ($global:btSecretKey -eq "")
+        }
+        else {
+            Write-Host
+            $msg = "INFO: Already selected Azure Storage Account Primary Access Key."
+            Write-Host -ForegroundColor Green $msg
+
+            Write-Host
+            $msg = "INFO: Exit the execution and run 'Get-Variable bt* -Scope Global | Clear-Variable' if you want to use a different Azure Storage Account Primary Access Key."
+            Write-Host -ForegroundColor Yellow $msg
+        }
+
         if (!$global:btRootPath) {
             #Get folder path to the FileServer root
             Write-host 
@@ -4418,142 +4436,13 @@ if ($action -ne $null) {
             $msg = "INFO: Exit the execution and run 'Get-Variable bt* -Scope Global | Clear-Variable' if you want to use a different folder path to the FileServer root."
             Write-Host -ForegroundColor Yellow $msg
         }
-
-        Write-Host
-        $msg = "INFO: Getting the connection information for the PST files and Azure Storage Account."
-        Write-Host $msg
-        Log-Write -Message $msg  
-
-        if (!$global:btExportPstEndpointId) {
-            #Select source endpoint
-            $global:btExportPstEndpointId = Select-MSPC_Endpoint -CustomerOrganizationId $global:btCustomerOrganizationId -ExportOrImport "source" -EndpointType 'Pst'
-        }
-        else {
-            Write-Host
-            $msg = "INFO: Already selected 'Pst' endpont '$global:btExportPstEndpointId'."
-            Write-Host -ForegroundColor Green $msg
-
-            Write-Host
-            $msg = "INFO: Exit the execution and run 'Get-Variable bt* -Scope Global | Clear-Variable' if you want to use a different 'Pst' endpont."
-            Write-Host -ForegroundColor Yellow $msg
-        }
-
-        if (!$global:btAzureCredentials) {
-            
-            if (!$global:btAzureCredentials) {
-                #Select source endpoint
-                $azureSubscriptionEndpointId = Select-MSPC_Endpoint -CustomerOrganizationId $global:btCustomerOrganizationId -EndpointType "AzureSubscription"
-                if ($azureSubscriptionEndpointId.count -gt 1) { $azureSubscriptionEndpointId = $azureSubscriptionEndpointId[1] }
-        
-                if ($azureSubscriptionEndpointId -eq "-1") {    
-                    do {
-                        $confirm = (Read-Host -prompt "Do you want to skip the Azure Check ?  [Y]es or [N]o")
-                        if ($confirm.ToLower() -eq "n") {
-                            $skipAzureCheck = $false    
-                
-                            Write-Host
-                            $msg = "ACTION: Provide the following credentials that cannot be retrieved from endpoints:"
-                            Write-Host -ForegroundColor Yellow $msg
-                            Log-Write -Message $msg 
-                
-                            Write-Host
-                            do {
-                                $administrativeUsername = (Read-Host -prompt "Please enter the Azure account email address")
-                            }while ($administrativeUsername -eq "")
-                        }
-                        if ($confirm.ToLower() -eq "y") {
-                            $skipAzureCheck = $true
-                        }    
-                    } while (($confirm.ToLower() -ne "y") -and ($confirm.ToLower() -ne "n"))    
-                }
-                else {
-                    $skipAzureCheck = $false
-                }
-            }
-            else {
-                Write-Host
-                $msg = "INFO: Already selected 'AzureSubscription' endpoint '$azureSubscriptionEndpointId'."
-                Write-Host -ForegroundColor Green $msg
-        
-                Write-Host
-                $msg = "INFO: Exit the execution and run 'Get-Variable bt* -Scope Global | Clear-Variable' if you want to connect to 'AzureSubscription'."
-                Write-Host -ForegroundColor Yellow $msg
-            }
-        
-            if (!$global:btAzureCredentials) {
-                #Get source endpoint credentials
-                [PSObject]$azureSubscriptionEndpointData = Get-MSPC_EndpointData -CustomerOrganizationId $global:btCustomerOrganizationId -EndpointId $azureSubscriptionEndpointId 
-        
-                #Create a PSCredential object to connect to Azure Active Directory tenant
-                $administrativeUsername = $azureSubscriptionEndpointData.AdministrativeUsername
-                    
-                if (!$script:AzureSubscriptionPassword) {
-                    Write-Host
-                    $msg = "ACTION: Provide the following credentials that cannot be retrieved from endpoints:"
-                    Write-Host -ForegroundColor Yellow $msg
-                    Log-Write -Message $msg 
-        
-                    do {
-                        $AzureAccountPassword = (Read-Host -prompt "Please enter the Azure Account Password" -AsSecureString)
-                    }while ($AzureAccountPassword -eq "")
-                }
-                else {
-                    $AzureAccountPassword = $script:AzureSubscriptionPassword
-                }
-        
-                $global:btAzureCredentials = New-Object System.Management.Automation.PSCredential ($administrativeUsername, $AzureAccountPassword)
-            }
-              
-            if (!$global:btSecretKey) {
-                #Get Azure Storage Primary Access Key source endpoint
-                do {
-                    $script:secretKeySecureString = (Read-Host -prompt "Please enter the Azure Storage Account Primary Access Key" -AsSecureString)
-        
-                    $BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($script:secretKeySecureString)
-                    $global:btSecretKey = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
-        
-                }while ($global:btSecretKey -eq "")
-            }
-            else {
-                Write-Host
-                $msg = "INFO: Already selected Azure Storage Account Primary Access Key."
-                Write-Host -ForegroundColor Green $msg
-    
-                Write-Host
-                $msg = "INFO: Exit the execution and run 'Get-Variable bt* -Scope Global | Clear-Variable' if you want to use a different Azure Storage Account Primary Access Key."
-                Write-Host -ForegroundColor Yellow $msg
-            }
-
-            if (!$global:btAzureSubscriptionID) {
-                #Get Azure Storage Primary Access Key source endpoint
-                do {
-                    $global:btAzureSubscriptionID = (Read-Host -prompt "Please enter the Azure subscription ID").trim()
-                }while ($global:btAzureSubscriptionID -eq "")
-            }
-            else {
-                Write-Host
-                $msg = "INFO: Already selected Azure subscription ID '$global:btAzureSubscriptionID'."
-                Write-Host -ForegroundColor Green $msg
-
-                Write-Host
-                $msg = "INFO: Exit the execution and run 'Get-Variable bt* -Scope Global | Clear-Variable' if you want to use a different Azure Storage Account Primary Access Key."
-                Write-Host -ForegroundColor Yellow $msg
-            }
-        }
-
-        Write-Host
-        $msg = "INFO: Getting the connection information for OneDrive For Business."
-        Write-Host $msg
-        Log-Write -Message $msg  
-
-        if (!$global:btImportEndpointId) {
+        if (!$global:importEndpointId) {
             #Select destination endpoint
-            $global:btImportEndpointId = Select-MSPC_Endpoint -CustomerOrganizationId $global:btCustomerOrganizationId -ExportOrImport "destination" -EndpointType 'OneDriveProAPI'
-
+            $global:importEndpointId = Select-MSPC_Endpoint -CustomerOrganizationId $global:btCustomerOrganizationId -ExportOrImport "destination" -EndpointType 'OneDriveProAPI'
         }
         else {
             Write-Host
-            $msg = "INFO: Already selected 'OneDriveProAPI' endpont '$global:btImportEndpointId'."
+            $msg = "INFO: Already selected 'OneDriveProAPI' endpont '$global:btWorkgroupId'."
             Write-Host -ForegroundColor Green $msg
 
             Write-Host
@@ -4562,77 +4451,19 @@ if ($action -ne $null) {
         }
 
         Write-Host
-        $msg = "INFO: Getting the connection information for Exchange Online."
-        Write-Host $msg
-        Log-Write -Message $msg  
-
-        if (!$global:btImportPstEndpointId) {
-            #Select destination PST endpoint
-
-            $global:btImportPstEndpointId = Select-MSPC_Endpoint -CustomerOrganizationId $global:btCustomerOrganizationId -ExportOrImport "destination" -EndpointType 'ExchangeOnline2'
-
-
-        }
-        else {
-            Write-Host
-            $msg = "INFO: Already selected 'ExchangeOnline2' endpont '$global:btImportPstEndpointId'."
-            Write-Host -ForegroundColor Green $msg
-
-            Write-Host
-            $msg = "INFO: Exit the execution and run 'Get-Variable bt* -Scope Global | Clear-Variable' if you want to use a different 'ExchangeOnline2' endpont."
-            Write-Host -ForegroundColor Yellow $msg
-        }
-
-        if (!$global:btMigrateToArchive ) {
-            Write-Host
-            do { 
-                $confirm = (Read-Host -prompt "Do you want to migrate to mailbox or to archive?  [M]ailbox or [A]rchive")    
-                if ($confirm.ToLower() -eq "a") {
-                    $target = "Archive"
-                    $global:btMigrateToArchive = $true
-                }
-                elseif ($confirm.ToLower() -eq "m") {
-                    $target = "Mailbox"
-                    $global:btMigrateToArchive = $false
-                }
-            } while (($confirm.ToLower() -ne "m") -and ($confirm.ToLower() -ne "a"))
-        }
-        else {
-            Write-Host
-            if ($global:btMigrateToArchive) {
-                $msg = "INFO: PST files will be migrated to archive mailbox."
+        do {
+            $confirm = (Read-Host -prompt "Do you want to add a custom folder mapping to move the home directory under a folder?  [Y]es or [N]o")
+    
+            if ($confirm.ToLower() -eq "y") {               
+                do {
+                    Write-host -ForegroundColor Yellow  "ACTION: Enter the destination folder name: "  -NoNewline
+                    $destinationFolder = Read-Host
+    
+                } while ($destinationFolder -eq "")            
             }
-            else {
-                $msg = "INFO: PST files will be migrated to mailbox."
-            }
-            Write-Host -ForegroundColor Green $msg
+        } while (($confirm.ToLower() -ne "y") -and ($confirm.ToLower() -ne "n"))
 
-            Write-Host
-            $msg = "INFO: Exit the execution and run 'Get-Variable bt* -Scope Global | Clear-Variable' if you want to use a different target."
-            Write-Host -ForegroundColor Yellow $msg
-        }
 
-        if (!$global:btApplyCustomFolderMapping ) {
-            Write-Host
-            do { 
-                $confirm = (Read-Host -prompt "Do you want to migrate the PST files under a folder with the original PST file name?  [Y]es or [N]o")    
-                if ($confirm.ToLower() -eq "y") {
-                    $global:btApplyCustomFolderMapping = $true
-                }
-                elseif ($confirm.ToLower() -eq "n") {
-                    $global:btApplyCustomFolderMapping = $false
-                }
-            } while (($confirm.ToLower() -ne "y") -and ($confirm.ToLower() -ne "n"))
-        }
-        else {
-            Write-Host
-            $msg = "INFO: PST files under a folder with the original PST file name."        
-            Write-Host -ForegroundColor Green $msg
-
-            Write-Host
-            $msg = "INFO: Exit the execution and run 'Get-Variable bt* -Scope Global | Clear-Variable' if you want to change the PST folder mapping."
-            Write-Host -ForegroundColor Yellow $msg
-        }
     
         write-host 
         $msg = "#######################################################################################################################`
@@ -4651,8 +4482,8 @@ if ($action -ne $null) {
         Log-Write -Message "CHANGING DIRECTORY" 
 
         write-host
-        write-host "PowerShell scripts have been downloaded to '$global:btWorkingDir\BitTitanMigrationWizFileServerPSTScripting-main':"
-        Set-Location "$global:btWorkingDir\BitTitanMigrationWizFileServerPSTScripting-main"
+        write-host "PowerShell scripts have been downloaded to '$global:btWorkingDir\BitTitanMigrationWizFileServerScripting-main':"
+        Set-Location "$global:btWorkingDir\BitTitanMigrationWizFileServerScripting-main"
 
         write-host 
         $msg = "#######################################################################################################################`
@@ -4681,17 +4512,15 @@ if ($action -ne $null) {
         write-host "For verify credentials but not migration:"
         write-host
 
-        write-host  -ForegroundColor Yellow ".\Concatenate-Create-Start-FileServerToOD4BHCLVersion.ps1 -BitTitanWorkGroupId $global:btWorkgroupId ``
+        write-host  -ForegroundColor Yellow ".\Concatenate-Create-Start-FileServerToOD4B.ps1 -BitTitanWorkGroupId $global:btWorkgroupId ``
     -BitTitanCustomerId $global:btCustomerId ``
     -WorkingDirectory 'C:\Scripts' ``
     -downloadLatestVersion `$false ``
     -BitTitanAzureDatacenter $global:btZoneRequirement ``
     -AzureStorageAccessKey $global:btSecretKey ``
     -FileServerRootFolderPath '$global:btRootPath' ``
-    -BitTitanSourceEndpointId  $global:btExportEndpointId ``
-    -BitTitanSourcePstEndpointId  $global:btExportPstEndpointId ``
-    -BitTitanDestinationEndpointId $global:btImportEndpointId ``
-    -BitTitanDestinationPstEndpointId $global:btImportPstEndpointId ``
+    -BitTitanSourceEndpointId  $global:exportEndpointId ``
+    -BitTitanDestinationEndpointId $global:importEndpointId ``
     -CheckFileServer `$true ``
     -CheckOneDriveAccounts `$false ``
     -MigrationWizFolderMapping 'MigratedHomeDir' ``
@@ -4704,25 +4533,20 @@ if ($action -ne $null) {
         write-host "For migration:"
         write-host
 
-        write-host  -ForegroundColor Yellow ".\Concatenate-Create-Start-FileServerToOD4BHCLVersion.ps1 -BitTitanWorkGroupId $global:btWorkgroupId ``
+        write-host  -ForegroundColor Yellow ".\Concatenate-Create-Start-FileServerToOD4B.ps1 -BitTitanWorkGroupId $global:btWorkgroupId ``
     -BitTitanCustomerId $global:btCustomerId ``
     -WorkingDirectory 'C:\Scripts' ``
     -downloadLatestVersion `$false ``
     -BitTitanAzureDatacenter $global:btZoneRequirement ``
     -AzureStorageAccessKey $global:btSecretKey ``
-    -AzureSubscriptionID $global:btAzureSubscriptionID ``
     -FileServerRootFolderPath '$global:btRootPath' ``
-    -BitTitanSourceEndpointId  $global:btExportEndpointId ``
-    -BitTitanSourcePstEndpointId  $global:btExportPstEndpointId ``
-    -BitTitanDestinationEndpointId $global:btImportEndpointId ``
-    -BitTitanDestinationPstEndpointId $global:btImportPstEndpointId ``
+    -BitTitanSourceEndpointId  $global:exportEndpointId ``
+    -BitTitanDestinationEndpointId $global:importEndpointId ``
     -CheckFileServer `$true ``
     -CheckOneDriveAccounts `$false ``
-    -MigrationWizFolderMapping 'MigratedHomeDir' ``
+    -MigrationWizFolderMapping $destinationFolder ``
     -OwnAzureStorageAccount `$false ``
     -ApplyUserMigrationBundle `$true ``
-    -MigrateToArchive `$$global:btMigrateToArchive  ``
-    -ApplyCustomFolderMapping `$$global:btApplyCustomFolderMapping  ``
     -BitTitanMigrationScope All ``
     -BitTitanMigrationType Full"  
 
